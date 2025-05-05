@@ -1,0 +1,59 @@
+{% extends "auth/layout.html" %}
+
+{% block content %}
+
+<form action="/auth/sign-up" method="post" class="form">
+    <p class="form-title">Create your account</p>
+    {% with errors = get_flashed_messages(category_filter=['error']) %}
+        {% if errors %}
+            <p id="error-message" class="error-message">{{ errors[0] }}</p>
+        {% endif %}
+    {% endwith %}
+    <div class="input-container">
+        <input id="email" type="email" name="email" required placeholder="Enter email">
+        <span>
+        </span>
+    </div>
+    <div class="input-container">
+        <input id="password" type="password" name="password" required placeholder="Enter password">
+        <span>
+        </span>
+    </div>
+    <div class="input-container">
+        <input id="confirmPassword" type="password" name="confirmPassword" required placeholder="Confirm password">
+        <span>
+        </span>
+    </div>
+    <small id="confirmPasswordError" class="errorMessage"></small>
+    <button id="submitButton" type="submit" class="submit">
+        Create
+    </button>
+
+    <p class="signup-link">
+        Already have an account?
+        <a href="/auth/login">Log In</a>
+    </p>
+</form>
+
+<script>
+    const password = document.getElementById('password')
+    const confirmPassword = document.getElementById('confirmPassword')
+    const submitButton = document.getElementById('submitButton')
+    const confirmPasswordErrorText = document.getElementById('confirmPasswordError')
+
+    confirmPassword.addEventListener('input', (event)=>{
+        const { target: {name, value} } = event
+
+        if (password?.value !== value) {
+            submitButton.disabled = true
+            confirmPasswordErrorText.style.color = 'red'
+            confirmPasswordErrorText.textContent = "Password does not match"
+        } else {
+            submitButton.disabled = false
+            confirmPasswordErrorText.textContent = ""
+        }
+    })
+
+</script>
+
+{% endblock content %}

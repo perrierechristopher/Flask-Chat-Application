@@ -1,0 +1,29 @@
+{% extends "auth/layout.html" %}
+
+{% block content %}
+    <!-- From Uiverse.io by nathann09 -->
+    <form action="/auth/login" method="post" class="form">
+        <p class="form-title">Sign in to your account</p>
+        {% with errors = get_flashed_messages(category_filter=['error']) %}
+            {% if errors %}
+                <p id="error-message" class="error-message">{{ errors[0] }}</p>
+            {% endif %}
+        {% endwith %}
+        <div class="input-container">
+            <input id="email" name="email" type="email" placeholder="Enter email" required>
+            <span>
+            </span>
+        </div>
+        <div class="input-container">
+            <input id="password" name="password" type="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="submit">
+            Sign in
+        </button>
+
+        <p class="signup-link">
+            No account?
+            <a href="/auth/sign-up">Sign up</a>
+        </p>
+    </form>
+{% endblock content %}
