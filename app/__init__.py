@@ -1,7 +1,9 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 from app.auth import auth_bp
+from app.auth.routes import login_required
+from app.db import get_db
 
 
 def create_app(custom_config=None):
@@ -37,7 +39,18 @@ def create_app(custom_config=None):
         return 'Hello, this is the home page'
     
     @app.route('/room', methods=["GET"])
+    @login_required
     def room():
+        
+        other_users = get_db().execute(
+            'SELECT email FROM users WHERE email != ?',[g.user['email']]
+        ).fetchall()
+        
+        data = {}
+        
+        for u in other_users:
+            print(u)
+        
         return render_template("room/index.html")
     
     return app
