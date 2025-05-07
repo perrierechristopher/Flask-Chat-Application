@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, redirect, url_for
 from app.auth import auth_bp
 from app.auth.routes import login_required
 from app.db import get_db
@@ -35,22 +35,24 @@ def create_app(custom_config=None):
 
     # a simple page that says hello
     @app.route('/')
-    def hello():
-        return 'Hello, this is the home page'
+    def home():
+        return redirect(url_for("auth.login"))
     
     @app.route('/room', methods=["GET"])
     @login_required
     def room():
-        
         other_users = get_db().execute(
-            'SELECT email FROM users WHERE email != ?',[g.user['email']]
+            'SELECT id, email FROM users WHERE email != ?',[g.user['email']]
         ).fetchall()
         
-        data = {}
+        data = {"users": []}
         
         for u in other_users:
-            print(u)
-        
-        return render_template("room/index.html")
+            data["users"].append({
+                "id": u["id"],
+                "email": u["email"],
+            })
+                            
+        return render_template("room/index.html", data=data)
     
     return app
