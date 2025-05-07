@@ -17,7 +17,7 @@
         flex: .3 !important;
     }
 
-    .users-list>li {
+    .users-list > li {
         width: 100%;
     }
 
@@ -32,6 +32,15 @@
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1) !important;
     }
 
+    .chat-header-box {
+        display: flex;
+        flex-direction: column;
+        background-color: #333;
+        line-height: 28px;
+        position: relative;
+        padding-block: 5px;
+    }
+
     .chat-header {
         background-color: #333;
         color: #fff;
@@ -39,6 +48,45 @@
         font-size: 18px;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
+    }
+
+    .search-input-box {
+        position: relative;
+    }
+
+    .search-input {
+        width: 90%;
+        line-height: 28px;
+        margin-left: 5px;
+        padding: 0 1rem;
+        padding-left: 2.5rem;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        outline: none;
+        background-color: #f3f3f4;
+        color: #0d0c22;
+        transition: .3s ease;
+    }
+
+    .search-input::placeholder {
+        color: #9e9ea7;
+    }
+
+    .search-input:focus,
+    .search-input:hover {
+        outline: none;
+        border-color: rgba(234, 76, 137, 0.4);
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgb(234 76 137 / 10%);
+    }
+
+    .icon {
+        position: absolute;
+        top: .5rem;
+        left: 1rem;
+        fill: #9e9ea7;
+        width: 1rem;
+        height: 1rem;
     }
 
     .chat-window {
@@ -268,21 +316,39 @@
     }
 </style>
 
+<script>
+    // Listen to click on username and set the chat accordingly
+</script>
+
 <div class="container">
     <div class="users-card card">
-        <div class="chat-header">Users</div>
-        <ul>
+
+        <div class="chat-header-box">
+            <div class="chat-header">Chats</div>
+            <!-- From Uiverse.io by alexruix -->
+            <div class="search-input-box">
+                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <g>
+                        <path
+                            d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z">
+                        </path>
+                    </g>
+                </svg>
+                <input id="search-input" placeholder="Search" type="search" class="search-input">
+            </div>
+        </div>
+        <!-- <ul>
             {% if g.user %}
-              <li><span>{{ g.user['email'] }}</span>
-              <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-            {% else %}
-              <li><a href="{{ url_for('auth.signup') }}">Register</a>
-              <li><a href="{{ url_for('auth.login') }}">Log In</a>
-            {% endif %}
-        </ul>
+            <li><span>{{ g.user['email'] }}</span>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+                {% else %}
+            <li><a href="{{ url_for('auth.signup') }}">Register</a>
+            <li><a href="{{ url_for('auth.login') }}">Log In</a>
+                {% endif %}
+        </ul> -->
         <div class="chat-window">
             <ul class="users-list message-list">
-                {% for i in range(5) %}
+                {% for user in data.users %}
                 <li>
                     <!-- From Uiverse.io by Li-Deheng -->
                     <button id="btn-message" class="button-message">
@@ -299,9 +365,9 @@
                             </div>
                         </div>
                         <div class="notice-content">
-                            <div class="username">Jessica Sanders</div>
+                            <div id="btn-username" class="username">{{user}}</div>
                             <div class="lable-message">Message<span class="number-message">3</span></div>
-                            <div class="user-id">@jessisanders</div>
+                            <!-- <div class="user-id">@jessisanders</div> -->
                         </div>
                     </button>
                 </li>
@@ -311,7 +377,7 @@
     </div>
     <!-- From Uiverse.io by ahmed150up -->
     <div class="card">
-        <div class="chat-header">Chat</div>
+        <div id="chat-header-user" class="chat-header"></div>
         <div class="chat-window">
             <ul class="message-list"></ul>
         </div>
