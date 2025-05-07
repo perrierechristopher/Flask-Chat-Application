@@ -1,13 +1,19 @@
 .vscode
 
+# Mocked data used for seeding
+.data
+
+# Virtual environments
 .venv/
 flask/
 
+# Personal sqliteNotes
 sqliteNotes
 
 *.pyc
 __pycache__/
 
+# Instance folder for app configuration
 instance/
 
 .pytest_cache/
