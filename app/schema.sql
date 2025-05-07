@@ -1,22 +1,19 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS conversations;
-DROP TABLE IF EXISTS conversations_members;
-DROP TABLE IF EXISTS messages;
 
-CREATE TABLE users (
+
+CREATE TABLE IF NOT EXISTS users (
   id TEXT NOT NULL UNIQUE PRIMARY KEY,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE conversations (
+CREATE TABLE IF NOT EXISTS conversations (
     id TEXT PRIMARY KEY, -- UUID
     name TEXT, -- optional (useful for group chats)
     is_group BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE conversation_members (
+CREATE TABLE IF NOT EXISTS conversation_members (
     user_id TEXT,
     conversation_id TEXT,
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -25,7 +22,7 @@ CREATE TABLE conversation_members (
     FOREIGN KEY (conversation_id) REFERENCES conversations(id)
 );
 
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
     id TEXT PRIMARY KEY, -- UUID
     conversation_id TEXT NOT NULL,
     sender_id TEXT NOT NULL,
