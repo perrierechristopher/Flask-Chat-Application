@@ -44,29 +44,33 @@ def create_user(*, id, email, password):
         
 def create_conversation(*, convData):
     try:
-        # convData['conv_id'] = 'CNV-' . uuid.uuid4()
-        # convData['message_id'] = 'MSG-' . uuid.uuid4()
-        
+        convData['conv_id'] = 'CNV-' + str(uuid.uuid4())
+        convData['message_id'] = 'MSG-' + str(uuid.uuid4())
         
         cursor = db.cursor()
         
-        sender_id = cursor.execute('SELECT id from users where email = ?', (convData['sender'],)).fetchone()[0]
-        recipient_id = cursor.execute('SELECT id from users where email = ?', (convData['recipient'],)).fetchone()[0]
-        print("Sender Id is " + sender_id)
-        print("Receiver Id is " + recipient_id)
+        convData['sender_id'] = cursor.execute('SELECT id from users where email = ?', (convData['sender'],)).fetchone()[0]
+        convData['recipient_id'] = cursor.execute('SELECT id from users where email = ?', (convData['recipient'],)).fetchone()[0]
 
-        cursor.executescript(
-            """
-            BEGIN
-            INSERT INTO conversations(id) VALUES(:conv_id)
-            INSERT INTO conversations_members()
-            COMMIT
-            """, convData
+        cursor.execute(
+            "INSERT INTO conversations(id) VALUES(:conv_id)",
+            convData
         )
+        
+        cursor.execute(
+            "INSERT INTO conversation_members(user_id, conversation_id) VALUES (:sender_id, :conv_id), (:recipient_id, :conv_id)",
+            convData
+        )
+                
+        cursor.execute(
+            "INSERT INTO messages(id, conversation_id, sender_id, content) VALUES (:message_id, :conv_id, :sender_id, :content)",
+            convData
+        )
+        
+        db.commit()
     
     except Exception as e:
         print(str(e))
-        pass
     
 try:
     # with open(usersDataPath, "r") as f:
