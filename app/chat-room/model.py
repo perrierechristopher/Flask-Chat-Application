@@ -1,9 +1,9 @@
 from app.db import get_db
 
-def init_conversation(userId):
+def init_conversation(userId, recipient):
     
     # check if the user already has a conversation with the recipient
-    get_db().execute(
+    conversations = get_db().execute(
         """
         SELECT c.id
         FROM conversations c
@@ -14,12 +14,12 @@ def init_conversation(userId):
         AND m2.user_id = ?
         GROUP BY c.id
         HAVING COUNT(DISTINCT m1.user_id || m2.user_id) = 2;
-        """
-    )
+        """, (userId, recipient.id)
+    ).fetchall()
     
     data = {
-        'chatWith': userEmail
-        'conversations': []
+        'chatWith': recipient.email
+        'conversations': conversations
     }
     
-    return
+    return data
